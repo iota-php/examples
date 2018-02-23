@@ -1,0 +1,30 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "0f69a4c9eed35641704db522bba11d59",
+    "packages": [
+        {
+            "name": "iota-php/client",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iota-php/client.git",
+                "reference": "moved-namespace"
+            },
+            "type": "library"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "iota-php/client": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

@@ -1,0 +1,9 @@
+{
+    "name": "iota-php/examples",
+    "description": "IOTA PHP examples",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "iota-php/client": "dev-master"
+    }
+}
