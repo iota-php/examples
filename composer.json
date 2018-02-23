@@ -1,0 +1,11 @@
+{
+    "name": "iota-php/examples",
+    "description": "IOTA PHP examples",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "iota-php/client": "dev-master",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/client-common": "1.7.*"
+    }
+}
