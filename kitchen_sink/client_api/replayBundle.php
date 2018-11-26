@@ -1,40 +1,37 @@
 <?php
-
 namespace IOTA\Apps\KitchenSink;
-
 /** @var \IOTA\Client $iota */
-$iota = include __DIR__.'/../bootstrap.php';
+$iota = include __DIR__ . '/../bootstrap.php';
 
-if (isAjax()) {
+if(isAjax())
+{
     try {
-        $node = $iota->getNodes()[$_POST['node']];
-        if ('' !== $_POST['tailTransactionHash']) {
-            $tailTransactionHash = new \IOTA\Type\TransactionHash($_POST['tailTransactionHash']);
-        } else {
-            $tailTransactionHash = null;
-        }
-        if ('' !== $_POST['depth']) {
-            $depth = (int) $_POST['depth'];
-        } else {
-            $depth = null;
-        }
-        if ('' !== $_POST['minWeightMagnitude']) {
-            $minWeightMagnitude = (int) $_POST['minWeightMagnitude'];
-        } else {
-            $minWeightMagnitude = null;
-        }
 
-        $result = $iota->getClientApi()->replayBundle(
-            $node,
-            $tailTransactionHash,
-            $depth,
-            $minWeightMagnitude
-        );
-        sendJson($result->serialize());
-    } catch (\Exception $ex) {
-        sendJson(['error' => $ex->getMessage()]);
+        $node = $iota->getNodes()[$_POST['node']];
+    if($_POST['tailTransactionHash'] !== '') {
+    $tailTransactionHash = new \IOTA\Type\TransactionHash($_POST['tailTransactionHash']);
+    } else {
+    $tailTransactionHash = null;
     }
-    exit;
+    if($_POST['depth'] !== '') {
+    $depth = (int)$_POST['depth'];
+    } else {
+    $depth = null;
+    }
+    if($_POST['minWeightMagnitude'] !== '') {
+    $minWeightMagnitude = (int)$_POST['minWeightMagnitude'];
+    } else {
+    $minWeightMagnitude = null;
+    }
+
+    $result = $iota->getClientApi()->replayBundle(
+            $node, $tailTransactionHash, $depth, $minWeightMagnitude
+);
+sendJson($result->serialize());
+} catch(\Exception $ex) {
+sendJson(['error' => $ex->getMessage()]);
+}
+exit;
 }
 
 ?>
@@ -125,70 +122,70 @@ if (isAjax()) {
     int $minWeightMagnitude
 ) : \IOTA\ClientApi\Actions\ReplayBundle\Result</pre></p>
     </div>
-    <div class="form-group">
-        <label for="node">Node</label>
-        <select class="form-control" id="node" name="node">
-            <?php foreach ($iota->getNodes() as $k => $node) : ?>
-            <option value="<?php echo $k; ?>"><?php echo $node->getHost(); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
-    </div>
+                        <div class="form-group">
+                <label for="node">Node</label>
+                <select class="form-control" id="node" name="node">
+                    <?php foreach($iota->getNodes() as $k => $node) : ?>
+                    <option value="<?= $k ?>"><?= $node->getHost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
+            </div>
 
-    <div class="form-group">
-        <label for="tailTransactionHash">tailTransactionHash</label>
-        <input type="text" class="form-control" id="tailTransactionHash" name="tailTransactionHash" aria-describedby="tailTransactionHash" placeholder="" value="">
-    </div>
-    <div class="form-group">
-        <label for="depth">depth</label>
-        <input type="number" class="form-control" name="depth" id="depth" value="">
-    </div>
-    <div class="form-group">
-        <label for="minWeightMagnitude">minWeightMagnitude</label>
-        <input type="number" class="form-control" name="minWeightMagnitude" id="minWeightMagnitude" value="">
-    </div>
-<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                <div class="form-group">
+                <label for="tailTransactionHash">tailTransactionHash</label>
+                <input type="text" class="form-control" id="tailTransactionHash" name="tailTransactionHash" aria-describedby="tailTransactionHash" placeholder="" value="">
+            </div>
+                                <div class="form-group">
+                <label for="depth">depth</label>
+                <input type="number" class="form-control" name="depth" id="depth" value="">
+            </div>
+                                <div class="form-group">
+                <label for="minWeightMagnitude">minWeightMagnitude</label>
+                <input type="number" class="form-control" name="minWeightMagnitude" id="minWeightMagnitude" value="">
+            </div>
+                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
-    <li class="nav-item">
-        <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
+        <li class="nav-item">
+            <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+            </div>
+            <pre><code class="json" id="result"></code></pre>
         </div>
-        <pre><code class="json" id="result"></code></pre>
+        <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
+            performance
+        </div>
     </div>
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
-        performance
-    </div>
-</div>
 
-<script>
-    $('#submit').on('click', function(e) {
-        $(".spinner").show();
-        var data = {
-                                            node: $("#node").val(),                                                                tailTransactionHash: $("#tailTransactionHash").val(),                                                                depth: $("#depth").val(),                                                                minWeightMagnitude: $("#minWeightMagnitude").val()                                    };
-                                                                        
-        $.post(window.location.href,data)
-            .done(function(data) {
-                $(".spinner").hide();
-                $("#result").html(JSON.stringify(data, null, 2));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
+    <script>
+        $('#submit').on('click', function(e) {
+            $(".spinner").show();
+            var data = {
+                                                            node: $("#node").val(),                                                                                tailTransactionHash: $("#tailTransactionHash").val(),                                                                                depth: $("#depth").val(),                                                                                minWeightMagnitude: $("#minWeightMagnitude").val()                                            };
+                                                                                                            
+            $.post(window.location.href,data)
+                .done(function(data) {
+                    $(".spinner").hide();
+                    $("#result").html(JSON.stringify(data, null, 2));
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
                 });
-            });
-    });
-    $(".spinner").hide();
-</script>
+        });
+        $(".spinner").hide();
+    </script>
 
 </main>
 

@@ -1,34 +1,26 @@
 <?php
-
 namespace IOTA\Apps\KitchenSink;
-
 /** @var \IOTA\Client $iota */
-$iota = include __DIR__.'/../bootstrap.php';
+$iota = include __DIR__ . '/../bootstrap.php';
 
-if (isAjax()) {
+if(isAjax())
+{
     try {
+
         $node = $iota->getNodes()[$_POST['node']];
-        $addresses = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['addresses']))), \IOTA\Type\Address::class);
-        $bundleHashes = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['bundleHashes']))), \IOTA\Type\BundleHash::class);
-        $tags = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['tags']))), \IOTA\Type\Tag::class);
-        $approvees = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['approvees']))), \IOTA\Type\Approvee::class);
-
-        $result = $iota->getRemoteApi()->findTransactions(
-            $node,
-
-            $addresses,
-
-            $bundleHashes,
-
-            $tags,
-
-            $approvees
-        );
-        sendJson($result->serialize());
-    } catch (\Exception $ex) {
-        sendJson(['error' => $ex->getMessage()]);
-    }
-    exit;
+            $addresses = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['addresses']))), \IOTA\Type\Address::class);
+                $bundleHashes = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['bundleHashes']))), \IOTA\Type\BundleHash::class);
+                $tags = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['tags']))), \IOTA\Type\Tag::class);
+                $approvees = \IOTA\Util\TrytesUtil::arrayToTrytes(array_map('trim', array_filter(explode("\n", $_POST['approvees']))), \IOTA\Type\Approvee::class);
+    
+    $result = $iota->getRemoteApi()->findTransactions(
+            $node, $addresses, $bundleHashes, $tags, $approvees
+);
+sendJson($result->serialize());
+} catch(\Exception $ex) {
+sendJson(['error' => $ex->getMessage()]);
+}
+exit;
 }
 
 ?>
@@ -116,84 +108,84 @@ addresses, tags or approvees. Using multiple of these parameters returns
 the intersection of the values.</p>
         <p><pre>public function findTransactions(
     IOTA\Node $node,
-    array $addresses = Array,
-    array $bundleHashes = Array,
-    array $tags = Array,
-    array $approvees = Array
-) : \IOTA\RemoteApi\Commands\FindTransactions\Response</pre></p>
+    array $addresses = [],
+    array $bundleHashes = [],
+    array $tags = [],
+    array $approvees = []
+) : \IOTA\RemoteApi\Actions\FindTransactions\Result</pre></p>
     </div>
-    <div class="form-group">
-        <label for="node">Node</label>
-        <select class="form-control" id="node" name="node">
-            <?php foreach ($iota->getNodes() as $k => $node) : ?>
-            <option value="<?php echo $k; ?>"><?php echo $node->getHost(); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
-    </div>
+                        <div class="form-group">
+                <label for="node">Node</label>
+                <select class="form-control" id="node" name="node">
+                    <?php foreach($iota->getNodes() as $k => $node) : ?>
+                    <option value="<?= $k ?>"><?= $node->getHost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
+            </div>
 
-        <div class="form-group">
-        <label for="addresses">addresses</label>
-        <textarea class="form-control" id="addresses" name="addresses" rows="3"></textarea>
-        <small class="form-text text-muted">new line for each</small>
-    </div>
-                <div class="form-group">
-        <label for="bundleHashes">bundleHashes</label>
-        <textarea class="form-control" id="bundleHashes" name="bundleHashes" rows="3"></textarea>
-        <small class="form-text text-muted">new line for each</small>
-    </div>
-                <div class="form-group">
-        <label for="tags">tags</label>
-        <textarea class="form-control" id="tags" name="tags" rows="3"></textarea>
-        <small class="form-text text-muted">new line for each</small>
-    </div>
-                <div class="form-group">
-        <label for="approvees">approvees</label>
-        <textarea class="form-control" id="approvees" name="approvees" rows="3"></textarea>
-        <small class="form-text text-muted">new line for each</small>
-    </div>
-        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                                <div class="form-group">
+                    <label for="addresses">addresses</label>
+                    <textarea class="form-control" id="addresses" name="addresses" rows="3"></textarea>
+                    <small class="form-text text-muted">new line for each</small>
+                </div>
+                                                                        <div class="form-group">
+                    <label for="bundleHashes">bundleHashes</label>
+                    <textarea class="form-control" id="bundleHashes" name="bundleHashes" rows="3"></textarea>
+                    <small class="form-text text-muted">new line for each</small>
+                </div>
+                                                                        <div class="form-group">
+                    <label for="tags">tags</label>
+                    <textarea class="form-control" id="tags" name="tags" rows="3"></textarea>
+                    <small class="form-text text-muted">new line for each</small>
+                </div>
+                                                                        <div class="form-group">
+                    <label for="approvees">approvees</label>
+                    <textarea class="form-control" id="approvees" name="approvees" rows="3"></textarea>
+                    <small class="form-text text-muted">new line for each</small>
+                </div>
+                                        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
-    <li class="nav-item">
-        <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
+        <li class="nav-item">
+            <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+            </div>
+            <pre><code class="json" id="result"></code></pre>
         </div>
-        <pre><code class="json" id="result"></code></pre>
+        <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
+            performance
+        </div>
     </div>
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
-        performance
-    </div>
-</div>
 
-<script>
-    $('#submit').on('click', function(e) {
-        $(".spinner").show();
-        var data = {
-                                            node: $("#node").val(),                                                                addresses: $("#addresses").val(),                                                                bundleHashes: $("#bundleHashes").val(),                                                                tags: $("#tags").val(),                                                                approvees: $("#approvees").val()                                    };
-                                                                                        
-        $.post(window.location.href,data)
-            .done(function(data) {
-                $(".spinner").hide();
-                $("#result").html(JSON.stringify(data, null, 2));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
+    <script>
+        $('#submit').on('click', function(e) {
+            $(".spinner").show();
+            var data = {
+                                                            node: $("#node").val(),                                                                                addresses: $("#addresses").val(),                                                                                bundleHashes: $("#bundleHashes").val(),                                                                                tags: $("#tags").val(),                                                                                approvees: $("#approvees").val()                                            };
+                                                                                                                                    
+            $.post(window.location.href,data)
+                .done(function(data) {
+                    $(".spinner").hide();
+                    $("#result").html(JSON.stringify(data, null, 2));
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
                 });
-            });
-    });
-    $(".spinner").hide();
-</script>
+        });
+        $(".spinner").hide();
+    </script>
 
 </main>
 

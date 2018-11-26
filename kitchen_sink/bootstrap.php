@@ -24,11 +24,7 @@ use IOTA\Node;
 use IOTA\RemoteApi\RemoteApi;
 
 $nodes = [
-    new Node('http://node01.iotatoken.nl:14265'),
-    new Node('http://node02.iotatoken.nl:14265'),
-    new Node('http://node03.iotatoken.nl:15265'),
-    new Node('http://node04.iotatoken.nl:14265'),
-    new Node('http://node05.iotatoken.nl:16265'),
+    new Node('https://nodes.thetangle.org:443')
 ];
 
 $options = [

@@ -1,40 +1,35 @@
 <?php
-
 namespace IOTA\Apps\KitchenSink;
-
 /** @var \IOTA\Client $iota */
-$iota = include __DIR__.'/../bootstrap.php';
+$iota = include __DIR__ . '/../bootstrap.php';
 
-if (isAjax()) {
+if(isAjax())
+{
     try {
-        $node = $iota->getNodes()[$_POST['node']];
-        $seed = new \IOTA\Type\Seed($_POST['seed']);
-        if ('' !== $_POST['startIndex']) {
-            $startIndex = (int) $_POST['startIndex'];
-        } else {
-            $startIndex = null;
-        }
-        if ('' !== $_POST['endIndex']) {
-            $endIndex = (int) $_POST['endIndex'];
-        } else {
-            $endIndex = null;
-        }
-        $threshold = new \IOTA\Type\Iota($_POST['threshold']);
-        $security = \IOTA\Type\SecurityLevel::fromValue($_POST['security']);
 
-        $result = $iota->getClientApi()->getInputs(
-            $node,
-            $seed,
-            $startIndex,
-            $endIndex,
-            $threshold,
-            $security
-        );
-        sendJson($result->serialize());
-    } catch (\Exception $ex) {
-        sendJson(['error' => $ex->getMessage()]);
+        $node = $iota->getNodes()[$_POST['node']];
+    $seed = new \IOTA\Type\Seed($_POST['seed']);
+    if($_POST['startIndex'] !== '') {
+    $startIndex = (int)$_POST['startIndex'];
+    } else {
+    $startIndex = null;
     }
-    exit;
+    if($_POST['endIndex'] !== '') {
+    $endIndex = (int)$_POST['endIndex'];
+    } else {
+    $endIndex = null;
+    }
+    $threshold = new \IOTA\Type\Iota($_POST['threshold']);
+    $security = \IOTA\Type\SecurityLevel::fromValue($_POST['security']);
+
+    $result = $iota->getClientApi()->getInputs(
+            $node, $seed, $startIndex, $endIndex, $threshold, $security
+);
+sendJson($result->serialize());
+} catch(\Exception $ex) {
+sendJson(['error' => $ex->getMessage()]);
+}
+exit;
 }
 
 ?>
@@ -123,87 +118,87 @@ if (isAjax()) {
     IOTA\Type\Seed $seed,
     int $startIndex = 0,
     int $endIndex = -1,
-    IOTA\Type\Iota $threshold = ,
-    IOTA\Type\SecurityLevel $security =
+    IOTA\Type\Iota $threshold = null,
+    IOTA\Type\SecurityLevel $security = null
 ) : \IOTA\ClientApi\Actions\GetInputs\Result</pre></p>
     </div>
-    <div class="form-group">
-        <label for="node">Node</label>
-        <select class="form-control" id="node" name="node">
-            <?php foreach ($iota->getNodes() as $k => $node) : ?>
-            <option value="<?php echo $k; ?>"><?php echo $node->getHost(); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
-    </div>
+                        <div class="form-group">
+                <label for="node">Node</label>
+                <select class="form-control" id="node" name="node">
+                    <?php foreach($iota->getNodes() as $k => $node) : ?>
+                    <option value="<?= $k ?>"><?= $node->getHost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
+            </div>
 
-    <div class="form-group">
-        <label for="seed">Seed</label>
-        <input type="text" class="form-control seed" id="seed" name="seed" aria-describedby="seed" placeholder="" value="THISISTHETESTINGWALLETFORTHEPHPIOTALIBRARY9YOUMIGHTWANTTOSTEALTHEMBUTHEY9WTF9WHY9">
-        <small class="form-text text-muted">Online? This is just for local testing!</small>
-    </div>
-    <div class="form-group">
-        <label for="startIndex">startIndex</label>
-        <input type="number" class="form-control" name="startIndex" id="startIndex" value="0">
-    </div>
-    <div class="form-group">
-        <label for="endIndex">endIndex</label>
-        <input type="number" class="form-control" name="endIndex" id="endIndex" value="-1">
-    </div>
-    <div class="form-group">
-        <label for="threshold">threshold</label>
-        <input type="number" class="form-control" name="threshold" id="threshold" value="null">
-    </div>
-    <div class="form-group">
-        <label for="security">Security Level</label>
-        <select class="form-control" id="security" name="security">
-            <option value="1">1</option>
-            <option value="2" selected="selected">2</option>
-            <option value="3">3</option>
-        </select>
-    </div>
-<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                <div class="form-group">
+                <label for="seed">Seed</label>
+                <input type="text" class="form-control seed" id="seed" name="seed" aria-describedby="seed" placeholder="" value="THISISTHETESTINGWALLETFORTHEPHPIOTALIBRARY9YOUMIGHTWANTTOSTEALTHEMBUTHEY9WTF9WHY9">
+                <small class="form-text text-muted">Online? This is just for local testing!</small>
+            </div>
+                                <div class="form-group">
+                <label for="startIndex">startIndex</label>
+                <input type="number" class="form-control" name="startIndex" id="startIndex" value="0">
+            </div>
+                                <div class="form-group">
+                <label for="endIndex">endIndex</label>
+                <input type="number" class="form-control" name="endIndex" id="endIndex" value="-1">
+            </div>
+                                <div class="form-group">
+                <label for="threshold">threshold</label>
+                <input type="number" class="form-control" name="threshold" id="threshold" value="null">
+            </div>
+                                <div class="form-group">
+                <label for="security">Security Level</label>
+                <select class="form-control" id="security" name="security">
+                    <option value="1">1</option>
+                    <option value="2" selected="selected">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
-    <li class="nav-item">
-        <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
+        <li class="nav-item">
+            <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+            </div>
+            <pre><code class="json" id="result"></code></pre>
         </div>
-        <pre><code class="json" id="result"></code></pre>
+        <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
+            performance
+        </div>
     </div>
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
-        performance
-    </div>
-</div>
 
-<script>
-    $('#submit').on('click', function(e) {
-        $(".spinner").show();
-        var data = {
-                                            node: $("#node").val(),                                                                seed: $("#seed").val(),                                                                startIndex: $("#startIndex").val(),                                                                endIndex: $("#endIndex").val(),                                                                threshold: $("#threshold").val(),                                                                security: $("#security").val()                                    };
-                                                                                                        
-        $.post(window.location.href,data)
-            .done(function(data) {
-                $(".spinner").hide();
-                $("#result").html(JSON.stringify(data, null, 2));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
+    <script>
+        $('#submit').on('click', function(e) {
+            $(".spinner").show();
+            var data = {
+                                                            node: $("#node").val(),                                                                                seed: $("#seed").val(),                                                                                startIndex: $("#startIndex").val(),                                                                                endIndex: $("#endIndex").val(),                                                                                threshold: $("#threshold").val(),                                                                                security: $("#security").val()                                            };
+                                                                                                                                                            
+            $.post(window.location.href,data)
+                .done(function(data) {
+                    $(".spinner").hide();
+                    $("#result").html(JSON.stringify(data, null, 2));
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
                 });
-            });
-    });
-    $(".spinner").hide();
-</script>
+        });
+        $(".spinner").hide();
+    </script>
 
 </main>
 

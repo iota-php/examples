@@ -1,28 +1,27 @@
 <?php
-
 namespace IOTA\Apps\KitchenSink;
-
 /** @var \IOTA\Client $iota */
-$iota = include __DIR__.'/../bootstrap.php';
+$iota = include __DIR__ . '/../bootstrap.php';
 
-if (isAjax()) {
+if(isAjax())
+{
     try {
-        $node = $iota->getNodes()[$_POST['node']];
-        if ('' !== $_POST['transactionHash']) {
-            $transactionHash = new \IOTA\Type\TransactionHash($_POST['transactionHash']);
-        } else {
-            $transactionHash = null;
-        }
 
-        $result = $iota->getClientApi()->broadcastBundle(
-            $node,
-            $transactionHash
-        );
-        sendJson($result->serialize());
-    } catch (\Exception $ex) {
-        sendJson(['error' => $ex->getMessage()]);
+        $node = $iota->getNodes()[$_POST['node']];
+    if($_POST['transactionHash'] !== '') {
+    $transactionHash = new \IOTA\Type\TransactionHash($_POST['transactionHash']);
+    } else {
+    $transactionHash = null;
     }
-    exit;
+
+    $result = $iota->getClientApi()->broadcastBundle(
+            $node, $transactionHash
+);
+sendJson($result->serialize());
+} catch(\Exception $ex) {
+sendJson(['error' => $ex->getMessage()]);
+}
+exit;
 }
 
 ?>
@@ -111,62 +110,62 @@ if (isAjax()) {
     IOTA\Type\TransactionHash $transactionHash
 ) : \IOTA\ClientApi\VoidResult</pre></p>
     </div>
-    <div class="form-group">
-        <label for="node">Node</label>
-        <select class="form-control" id="node" name="node">
-            <?php foreach ($iota->getNodes() as $k => $node) : ?>
-            <option value="<?php echo $k; ?>"><?php echo $node->getHost(); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
-    </div>
+                        <div class="form-group">
+                <label for="node">Node</label>
+                <select class="form-control" id="node" name="node">
+                    <?php foreach($iota->getNodes() as $k => $node) : ?>
+                    <option value="<?= $k ?>"><?= $node->getHost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
+            </div>
 
-    <div class="form-group">
-        <label for="transactionHash">transactionHash</label>
-        <input type="text" class="form-control" id="transactionHash" name="transactionHash" aria-describedby="transactionHash" placeholder="" value="">
-    </div>
-<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                <div class="form-group">
+                <label for="transactionHash">transactionHash</label>
+                <input type="text" class="form-control" id="transactionHash" name="transactionHash" aria-describedby="transactionHash" placeholder="" value="">
+            </div>
+                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
-    <li class="nav-item">
-        <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
+        <li class="nav-item">
+            <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+            </div>
+            <pre><code class="json" id="result"></code></pre>
         </div>
-        <pre><code class="json" id="result"></code></pre>
+        <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
+            performance
+        </div>
     </div>
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
-        performance
-    </div>
-</div>
 
-<script>
-    $('#submit').on('click', function(e) {
-        $(".spinner").show();
-        var data = {
-                                            node: $("#node").val(),                                                                transactionHash: $("#transactionHash").val()                                    };
-                                        
-        $.post(window.location.href,data)
-            .done(function(data) {
-                $(".spinner").hide();
-                $("#result").html(JSON.stringify(data, null, 2));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
+    <script>
+        $('#submit').on('click', function(e) {
+            $(".spinner").show();
+            var data = {
+                                                            node: $("#node").val(),                                                                                transactionHash: $("#transactionHash").val()                                            };
+                                                            
+            $.post(window.location.href,data)
+                .done(function(data) {
+                    $(".spinner").hide();
+                    $("#result").html(JSON.stringify(data, null, 2));
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
                 });
-            });
-    });
-    $(".spinner").hide();
-</script>
+        });
+        $(".spinner").hide();
+    </script>
 
 </main>
 

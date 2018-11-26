@@ -6,6 +6,9 @@
     "require": {
         "iota-php/client": "dev-master",
         "php-http/guzzle6-adapter": "^1.1",
-        "php-http/client-common": "1.7.*"
+        "php-http/client-common": "1.7.*",
+        "nikic/php-parser": "^4.1",
+        "twig/twig": "^2.5",
+        "phpdocumentor/reflection-docblock": "^4.3"
     }
 }

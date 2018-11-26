@@ -1,40 +1,37 @@
 <?php
-
 namespace IOTA\Apps\KitchenSink;
-
 /** @var \IOTA\Client $iota */
-$iota = include __DIR__.'/../bootstrap.php';
+$iota = include __DIR__ . '/../bootstrap.php';
 
-if (isAjax()) {
+if(isAjax())
+{
     try {
-        $node = $iota->getNodes()[$_POST['node']];
-        if ('' !== $_POST['depth']) {
-            $depth = (int) $_POST['depth'];
-        } else {
-            $depth = null;
-        }
-        if ('' !== $_POST['numWalks']) {
-            $numWalks = (int) $_POST['numWalks'];
-        } else {
-            $numWalks = null;
-        }
-        if ('' !== $_POST['reference']) {
-            $reference = new \IOTA\Type\Tip($_POST['reference']);
-        } else {
-            $reference = null; //$iota->getRemoteApi()->getNodeInfo($node)->getLatestMilestone();
-        }
 
-        $result = $iota->getRemoteApi()->getTransactionsToApprove(
-            $node,
-            $depth,
-            $numWalks,
-            $reference
-        );
-        sendJson($result->serialize());
-    } catch (\Exception $ex) {
-        sendJson(['error' => $ex->getMessage()]);
+        $node = $iota->getNodes()[$_POST['node']];
+    if($_POST['depth'] !== '') {
+    $depth = (int)$_POST['depth'];
+    } else {
+    $depth = null;
     }
-    exit;
+    if($_POST['numWalks'] !== '') {
+    $numWalks = (int)$_POST['numWalks'];
+    } else {
+    $numWalks = null;
+    }
+    if($_POST['reference'] !== '') {
+    $reference = new \IOTA\Type\Tip($_POST['reference']);
+    } else {
+    $reference = null;//$iota->getRemoteApi()->getNodeInfo($node)->getLatestMilestone();
+    }
+
+    $result = $iota->getRemoteApi()->getTransactionsToApprove(
+            $node, $depth, $numWalks, $reference
+);
+sendJson($result->serialize());
+} catch(\Exception $ex) {
+sendJson(['error' => $ex->getMessage()]);
+}
+exit;
 }
 
 ?>
@@ -125,74 +122,74 @@ transactions).</p>
         <p><pre>public function getTransactionsToApprove(
     IOTA\Node $node,
     int $depth,
-    int $numWalks = ,
-    IOTA\Type\Milestone $reference =
-) : \IOTA\RemoteApi\Commands\GetTransactionsToApprove\Response</pre></p>
+    int $numWalks = null,
+    IOTA\Type\Milestone $reference = null
+) : \IOTA\RemoteApi\Actions\GetTransactionsToApprove\Result</pre></p>
     </div>
-    <div class="form-group">
-        <label for="node">Node</label>
-        <select class="form-control" id="node" name="node">
-            <?php foreach ($iota->getNodes() as $k => $node) : ?>
-            <option value="<?php echo $k; ?>"><?php echo $node->getHost(); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
-    </div>
+                        <div class="form-group">
+                <label for="node">Node</label>
+                <select class="form-control" id="node" name="node">
+                    <?php foreach($iota->getNodes() as $k => $node) : ?>
+                    <option value="<?= $k ?>"><?= $node->getHost() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="form-text text-muted">Select a node where the remote requests (commands) will be executed on.</small>
+            </div>
 
-    <div class="form-group">
-        <label for="depth">depth</label>
-        <input type="number" class="form-control" name="depth" id="depth" value="">
-    </div>
-    <div class="form-group">
-        <label for="numWalks">numWalks</label>
-        <input type="number" class="form-control" name="numWalks" id="numWalks" value="null">
-    </div>
-    <div class="form-group">
-        <label for="reference">reference</label>
-        <input type="text" class="form-control" id="reference" name="reference" aria-describedby="reference" placeholder="" value="">
-    </div>
-<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                <div class="form-group">
+                <label for="depth">depth</label>
+                <input type="number" class="form-control" name="depth" id="depth" value="">
+            </div>
+                                <div class="form-group">
+                <label for="numWalks">numWalks</label>
+                <input type="number" class="form-control" name="numWalks" id="numWalks" value="null">
+            </div>
+                                <div class="form-group">
+                <label for="reference">reference</label>
+                <input type="text" class="form-control" id="reference" name="reference" aria-describedby="reference" placeholder="" value="">
+            </div>
+                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
-    <li class="nav-item">
-        <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
-    </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
-        <div class="spinner">
-            <div class="rect1"></div>
-            <div class="rect2"></div>
-            <div class="rect3"></div>
-            <div class="rect4"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top: 30px;">
+        <li class="nav-item">
+            <a class="nav-link active" id="json-tab" data-toggle="tab" href="#json" role="tab" aria-controls="json" aria-selected="true">JSON result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="false">Performance</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="json" role="tabpanel" aria-labelledby="json-tab">
+            <div class="spinner">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+            </div>
+            <pre><code class="json" id="result"></code></pre>
         </div>
-        <pre><code class="json" id="result"></code></pre>
+        <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
+            performance
+        </div>
     </div>
-    <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="profile-tab">
-        performance
-    </div>
-</div>
 
-<script>
-    $('#submit').on('click', function(e) {
-        $(".spinner").show();
-        var data = {
-                                            node: $("#node").val(),                                                                depth: $("#depth").val(),                                                                numWalks: $("#numWalks").val(),                                                                reference: $("#reference").val()                                    };
-                                                                        
-        $.post(window.location.href,data)
-            .done(function(data) {
-                $(".spinner").hide();
-                $("#result").html(JSON.stringify(data, null, 2));
-                $('pre code').each(function(i, block) {
-                    hljs.highlightBlock(block);
+    <script>
+        $('#submit').on('click', function(e) {
+            $(".spinner").show();
+            var data = {
+                                                            node: $("#node").val(),                                                                                depth: $("#depth").val(),                                                                                numWalks: $("#numWalks").val(),                                                                                reference: $("#reference").val()                                            };
+                                                                                                            
+            $.post(window.location.href,data)
+                .done(function(data) {
+                    $(".spinner").hide();
+                    $("#result").html(JSON.stringify(data, null, 2));
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
                 });
-            });
-    });
-    $(".spinner").hide();
-</script>
+        });
+        $(".spinner").hide();
+    </script>
 
 </main>
 
